@@ -35,6 +35,11 @@ namespace TopDownAction
             _homebase.AddUnits(count);
         }
 
+        public void AddUnits(AddCountButton addButton)
+        {
+            _homebase.AddUnits(addButton.Count);
+        }
+
         private void Update()
         {
             UpdateProgress();
