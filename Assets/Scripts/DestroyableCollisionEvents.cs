@@ -61,7 +61,6 @@ namespace TopDownAction
             {
                 if (target.TeamType != _teamType)
                 {
-                    print(_teamType + " " + target.TeamType);
                     AddTarget(target);
                 }
             }
