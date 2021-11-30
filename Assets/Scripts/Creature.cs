@@ -8,14 +8,14 @@ namespace TopDownAction
     [RequireComponent(typeof(CreatureAnimation))]
     [RequireComponent(typeof(Animator))]
     //[RequireComponent(typeof(CreatureCollisionEvents))]
-    public class Creature : MonoBehaviour, IDestroyable
+    public class Creature : MonoBehaviour, IDestroyable, IUpdatable
     {
         public int Health { get; private set; }
         public TeamsTypes TeamType { get; private set; }
         public CreatureParameters Parameters { get; private set; }
         private CreatureAi _creatureAi;
         public Vector3 Position => transform.position;
-        public Action OnUpdate = () => { };
+        public event Action OnUpdate = () => { };
         public event Action OnDeath = () => { };
         public event Action OnChangeHealth = () => { };
         public virtual void Constructor(TeamsTypes teamType, CreatureParameters parameters)

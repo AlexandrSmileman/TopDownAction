@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
+using UnityEngine.AI;
 
 namespace TopDownAction
 {
     public class CreatureAi : IMovable
     {
         protected Creature _creature;
-        protected CreatureMovement _movement;
+        protected Movement _movement;
         private DestroyableCollisionEvents _collisionEvents;
         protected IDestroyable _target;
         private CreatureAnimation _animation;
@@ -29,7 +30,7 @@ namespace TopDownAction
             _animation.Constructor(_creature);
             _animation.OnHitEvent += HitTarget;
             
-            _movement = new CreatureMovement(_creature);
+            _movement = new Movement(_creature.GetComponent<NavMeshAgent>(), _creature, _creature);
             _movement.OnStopped += OnStopped;
             
         }
