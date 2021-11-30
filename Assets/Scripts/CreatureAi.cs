@@ -6,7 +6,7 @@ namespace TopDownAction
     {
         protected Creature _creature;
         protected CreatureMovement _movement;
-        private CreatureCollisionEvents _collisionEvents;
+        private DestroyableCollisionEvents _collisionEvents;
         protected IDestroyable _target;
         private CreatureAnimation _animation;
 
@@ -20,20 +20,25 @@ namespace TopDownAction
         {
             _creature = creature;
             _creature.OnUpdate += OnUpdate;
-            _collisionEvents = _creature.CollisionEvents;
+            
+            _collisionEvents = creature.gameObject.GetComponentInChildren<DestroyableCollisionEvents>();
+            _collisionEvents.Constructor(creature);
             _collisionEvents.OnTargetAdded += OnTargetAdded;
+            
             _animation = _creature.gameObject.GetComponent<CreatureAnimation>();
             _animation.Constructor(_creature);
+            _animation.OnHitEvent += HitTarget;
+            
             _movement = new CreatureMovement(_creature);
             _movement.OnStopped += OnStopped;
-            _animation.OnHitEvent += HitTarget;
+            
         }
 
         public virtual void OnUpdate()
         {
             if (_target != null && _target.Equals(null))
             {
-                _target = null;//target dead
+                _target = null;//target is dead
                 _movement.MoveToPosition(_destination);
                 _animation.Walk();
             }

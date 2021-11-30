@@ -5,33 +5,25 @@ using UnityEngine.AI;
 namespace TopDownAction
 {
     [RequireComponent(typeof(NavMeshAgent))]
-    //[RequireComponent(typeof(CreatureAnimation))]
+    [RequireComponent(typeof(CreatureAnimation))]
     [RequireComponent(typeof(Animator))]
     //[RequireComponent(typeof(CreatureCollisionEvents))]
     public class Creature : MonoBehaviour, IDestroyable
     {
-        private TeamsTypes _teamType;
-        public TeamsTypes TeamType { get { return _teamType; } }
-        private CreatureParameters _parameters;
-        public CreatureParameters Parameters { get { return _parameters; } }
-        private CreatureCollisionEvents _collisionEvents;
-        public CreatureCollisionEvents CollisionEvents{ get { return _collisionEvents; } }
+        public int Health { get; private set; }
+        public TeamsTypes TeamType { get; private set; }
+        public CreatureParameters Parameters { get; private set; }
         private CreatureAi _creatureAi;
-        private int _health;
-        public int Health => _health;
         public Vector3 Position => transform.position;
         public Action OnUpdate = () => { };
         public event Action OnDeath = () => { };
         public event Action OnChangeHealth = () => { };
         public virtual void Constructor(TeamsTypes teamType, CreatureParameters parameters)
         {
-            _parameters = parameters;
-            _teamType = teamType;
-            _health = _parameters.health;
-            _collisionEvents = gameObject.AddComponent<CreatureCollisionEvents>();
-            _collisionEvents.Constructor(this);
+            Parameters = parameters;
+            TeamType = teamType;
+            Health = Parameters.health;
 
-            //_creatureAi = new CreatureAi(this, _movement, _collisionEvents, _animation);
             GameElementsView.Instance.AddHealthBar(this, transform);
         }
 
@@ -48,13 +40,12 @@ namespace TopDownAction
 
         public void ChangeHealth(float value)
         {
-            _health += (int)value;
-            if (_health <= 0)
+            Health += (int)value;
+            if (Health <= 0)
             {
-                _health = 0;
+                Health = 0;
                 OnDeath();
                 Destroy(GetComponent<Rigidbody>());
-                Destroy(GetComponent<Collider>());
                 Destroy(this);
             }
 

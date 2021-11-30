@@ -9,7 +9,7 @@ namespace TopDownAction
          private Vector3 BasePoint { get; set; }
          private float _waitingTime;
 
-         private const float MAX_WAITING_TIME = 5f;
+         private const float MAXWaitingTime = 5f;
 
         public EnemyAi(Creature creature) : base(creature)
         {
@@ -27,7 +27,7 @@ namespace TopDownAction
             if (_target == null && _movement.IsStopped)
             {
                 _waitingTime += Time.deltaTime;
-                if (_waitingTime > MAX_WAITING_TIME)
+                if (_waitingTime > MAXWaitingTime)
                 {
                     Vector3 randomDirection = Quaternion.AngleAxis(Random.Range(0, 360), Vector3.up) * Vector3.forward;
                     Vector3 pos = BasePoint + randomDirection * Random.Range(2f, 3f);

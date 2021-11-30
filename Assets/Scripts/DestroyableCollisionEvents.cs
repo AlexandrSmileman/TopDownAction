@@ -5,28 +5,32 @@ using UnityEngine;
 
 namespace TopDownAction
 {
-    public class CreatureCollisionEvents : MonoBehaviour
+    public class DestroyableCollisionEvents : MonoBehaviour
     {
         public Action OnTargetAdded = () => { };
-        //private Creature _creature;
         private List<IDestroyable> _targets = new List<IDestroyable>();
-        private TeamsTypes teamType;
+        private TeamsTypes _teamType;
+        private Collider _collider;
 
-        public void Constructor(Creature creature)
+        private void OnEnable()
         {
-            //_creature = creature;
-            teamType = creature.TeamType;
-            //creature.HitTarget += HitTarget;
+            _collider = GetComponent<Collider>();
+            _collider.enabled = false;
         }
 
-        public bool HasTarget
+        public void Constructor(IDestroyable destroyable)
         {
-            get { return _targets.Count > 0; }
+            destroyable.OnDeath += ()=> { _collider.enabled = false; };
+            _teamType = destroyable.TeamType;
+            _collider.enabled = true;
         }
+
+        public bool HasTarget => _targets.Count > 0;
 
         public void ClearTargets()
         {
             _targets.Clear();
+            print("target clear");
         }
 
         public IDestroyable GetTarget()
@@ -38,13 +42,7 @@ namespace TopDownAction
                 else
                     _targets.RemoveAt(0);
             }
-
             return null;
-        }
-
-        public void RemoveTarget(IDestroyable creature)
-        {
-            _targets.Remove(creature);
         }
 
         private void OnTriggerEnter(Collider other)
@@ -59,12 +57,11 @@ namespace TopDownAction
 
         private void Trigger(Collider other)
         {
-            if(teamType.Equals(TeamsTypes.None))
-                return;;
             if (other.TryGetComponent(out IDestroyable target))
             {
-                if (target.TeamType != teamType)
+                if (target.TeamType != _teamType)
                 {
+                    print(_teamType + " " + target.TeamType);
                     AddTarget(target);
                 }
             }

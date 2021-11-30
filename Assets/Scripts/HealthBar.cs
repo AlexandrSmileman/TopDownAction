@@ -13,14 +13,14 @@ public class HealthBar : MonoBehaviour
     [SerializeField]
     private SpriteRenderer _renderer;
     private IDestroyable _destroyable;
-    private Quaternion rotation;
+    private Quaternion _rotation;
 
     public void Constructor(IDestroyable destroyable)
     {
         _destroyable = destroyable;
         _destroyable.OnChangeHealth += UpdateRender;
         //rotate to the camera once if the camera does not rotate later
-        rotation = Quaternion.LookRotation(-Camera.main.transform.forward, Vector3.up);
+        _rotation = Quaternion.LookRotation(-Camera.main.transform.forward, Vector3.up);
         UpdateRender();
     }
     
@@ -31,6 +31,6 @@ public class HealthBar : MonoBehaviour
 
     private void Update()
     {
-        transform.rotation = rotation;
+        transform.rotation = _rotation;
     }
 }
